@@ -1,9 +1,9 @@
-name: IMSDK_UAT_Compilation_PR
+name: QIMSDK_UAT_Compilation_PR
 run-name: "${{ github.event.workflow_run.display_title }}"
 
 on:
   workflow_run:
-    workflows: ["IMSDK_UAT_Compilation"]
+    workflows: ["QIMSDK_UAT_Compilation"]
     types: [completed]
 
 concurrency:
@@ -51,7 +51,7 @@ jobs:
               repo: context.repo.repo,
               sha: "${{ steps.pr.outputs.sha }}",
               state: "pending",
-              context: "IMSDK_UAT_Compilation_PR",
+              context: "QIMSDK_UAT_Compilation_PR",
               description: "Build running",
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             });
@@ -71,7 +71,7 @@ jobs:
 
   build:
     needs: init
-    uses: ./.github/workflows/imsdk-build.yml
+    uses: ./.github/workflows/qimsdk-build.yml
     with:
       ref: ${{ needs.init.outputs.pr-sha }}
       sdk-url: ${{ needs.init.outputs.sdk-url }}
@@ -93,7 +93,7 @@ jobs:
               repo: context.repo.repo,
               sha: "${{ needs.init.outputs.pr-sha }}",
               state: "${{ needs.build.result == 'success' && 'success' || 'failure' }}",
-              context: "IMSDK_UAT_Compilation_PR",
+              context: "QIMSDK_UAT_Compilation_PR",
               description: "${{ needs.build.result == 'success' && 'Build succeeded' || 'Build failed' }}",
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             });
